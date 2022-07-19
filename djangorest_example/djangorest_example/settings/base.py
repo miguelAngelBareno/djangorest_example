@@ -40,11 +40,12 @@ BASE_APPS = [
 ]
 
 LOCAL_APPS = [
-
+    'apps.users',
 ]
 
 THIRD_APPS = [
     'rest_framework',
+    'simple_history',
 ] #aplicaciones creadas por terceros
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'djangorest_example.urls'
@@ -109,6 +111,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Static files (CSS, JavaScript, Images)
