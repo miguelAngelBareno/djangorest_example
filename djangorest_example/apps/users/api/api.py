@@ -15,11 +15,13 @@ class UserAPIView(APIView):
 @api_view(['GET','POST'])
 def user_decorator_api_view(request):
 
+    #list
     if request.method == 'GET':
         users = User.objects.all()
         users_serializer = UserSerializer(users, many = True)
         return Response(users_serializer.data, status = status.HTTP_200_OK)
 
+    #Create
     elif request.method == 'POST':
         user_serializer = UserSerializer(data = request.data)
 
@@ -32,6 +34,7 @@ def user_decorator_api_view(request):
 @api_view(['GET','PUT', 'DELETE'])
 def user_detail_view(request, pk = None):
 
+    #queryset
     if request.method == 'GET':
         if pk is not None:
             user = User.objects.filter(id = pk).first()
@@ -40,6 +43,7 @@ def user_detail_view(request, pk = None):
         else:
             print("pk vacio")
 
+    #Update
     elif request.method == 'PUT':
         if pk is not None:
             user= User.objects.filter(id = pk).first()
@@ -47,9 +51,10 @@ def user_detail_view(request, pk = None):
             if UserSerializer.is_valid():
                 user_serializer.save()
                 return Response(user_serializer.data, status = status.HTTP_202_ACCEPTED)
-            return Response({'message': 'No se ha encontrado un usuario con esta pk'})           )
+            return Response({'message': 'No se ha encontrado un usuario con esta pk'}, status = status.HTTP_404_NOT_FOUND)
 
+    #Delete
     elif request.method == 'DELETE':
         user = User.objects.filter(id = pk).first()
         user.delete()
-        return Response('usuario id = {} fue elemininado '.format(pk), status = status.HTTP_202_ACCEPTED, status = status.HTTP_400_BAD_REQUEST)
+        return Response(f'usuario id = {pk} fue elemininado ', status = status.HTTP_202_ACCEPTED)
