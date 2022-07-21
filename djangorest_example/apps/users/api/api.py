@@ -1,3 +1,4 @@
+from operator import is_not
 import re
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,3 +30,13 @@ def user_decorator_api_view(request):
 
         return Response(user_serializer.errors)
 
+@api_view(['GET'])
+def user_detail_view(request, pk = None):
+
+    if request.method == 'GET':
+        if pk is not None:
+            user = User.objects.filter(id = pk).first()
+            user_serializer = UserSerializer(user)
+            return Response(user_serializer.data)
+        else:
+            print("pk vacio")
