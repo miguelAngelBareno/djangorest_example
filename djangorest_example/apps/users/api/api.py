@@ -30,7 +30,7 @@ def user_decorator_api_view(request):
 
         return Response(user_serializer.errors)
 
-@api_view(['GET','PUT'])
+@api_view(['GET','PUT', 'DELETE'])
 def user_detail_view(request, pk = None):
 
     if request.method == 'GET':
@@ -41,7 +41,7 @@ def user_detail_view(request, pk = None):
         else:
             print("pk vacio")
 
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         if pk is not None:
             user= User.objects.filter(id = pk).first()
             user_serializer = UserSerializer(user, data = request.data)
@@ -49,3 +49,8 @@ def user_detail_view(request, pk = None):
                 user_serializer.save()
                 return Response(user_serializer.data)
             return Response(user_serializer.errors)
+
+    elif request.method == 'DELETE':
+        user = User.objects.filter(id = pk).first()
+        user.delete()
+        return Response('usuario id = {} fue elemininado '.format(pk))
