@@ -27,7 +27,7 @@ def user_decorator_api_view(request):
             user_serializer.save()
             return Response(user_serializer.data, status = status.HTTP_201_CREATED)
 
-        return Response(user_serializer.errors)
+        return Response(user_serializer.errors, status = status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET','PUT', 'DELETE'])
 def user_detail_view(request, pk = None):
@@ -47,9 +47,9 @@ def user_detail_view(request, pk = None):
             if UserSerializer.is_valid():
                 user_serializer.save()
                 return Response(user_serializer.data, status = status.HTTP_202_ACCEPTED)
-            return Response(user_serializer.errors)
+            return Response({'message': 'No se ha encontrado un usuario con esta pk'})           )
 
     elif request.method == 'DELETE':
         user = User.objects.filter(id = pk).first()
         user.delete()
-        return Response('usuario id = {} fue elemininado '.format(pk), status = status.HTTP_202_ACCEPTED)
+        return Response('usuario id = {} fue elemininado '.format(pk), status = status.HTTP_202_ACCEPTED, status = status.HTTP_400_BAD_REQUEST)
