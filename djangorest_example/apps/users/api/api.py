@@ -30,7 +30,7 @@ def user_decorator_api_view(request):
 
         return Response(user_serializer.errors)
 
-@api_view(['GET'])
+@api_view(['GET','PUT'])
 def user_detail_view(request, pk = None):
 
     if request.method == 'GET':
@@ -40,3 +40,12 @@ def user_detail_view(request, pk = None):
             return Response(user_serializer.data)
         else:
             print("pk vacio")
+
+    if request.method == 'PUT':
+        if pk is not None:
+            user= User.objects.filter(id = pk).first()
+            user_serializer = UserSerializer(user, data = request.data)
+            if UserSerializer.is_valid():
+                user_serializer.save()
+                return Response(user_serializer.data)
+            return Response(user_serializer.errors)
